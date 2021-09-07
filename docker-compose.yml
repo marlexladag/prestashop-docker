@@ -1,0 +1,33 @@
+version: '2'
+
+volumes:
+  db-data:
+
+services:
+  mysql:
+    image: mariadb:10.3.23
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: prestashop
+    restart: always
+  apache:
+    container_name: prestashop-816124
+    image: prestashop/prestashop:1.6-7.1-apache
+    environment:
+      PS_INSTALL_AUTO: 0
+      DB_PASSWD: password
+      DB_NAME: prestashop
+      DB_SERVER: mysql
+      PS_DOMAIN: localhost:8001
+      PS_FOLDER_INSTALL: install-dev
+      PS_FOLDER_ADMIN: mladmin
+    ports:
+      - "8001:80"
+    volumes:
+      - ./:/var/www/html/:delegated
+    restart: always
+
